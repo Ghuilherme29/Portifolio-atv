@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR" x-data="app()" :class="{'dark':dark}" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Guilherme — Estudante de Desenvolvimento de Sistemas com foco em BackEnd.">
+<meta name="keywords" content="desenvolvedor backend, java, react, portfolio, estudante, roxo e preto">
+<meta name="author" content="Guilherme">
+<meta property="og:title" content="Guilherme — Desenvolvedor BackEnd">
+<meta property="og:description" content="Estudante de Desenvolvimento de Sistemas focado em criar soluções robustas.">
+<meta property="og:type" content="website">
+<title>Guilherme — Desenvolvedor BackEnd</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: { display: ['PT Sans','sans-serif'], body: ['DM Sans','sans-serif'] },
+      colors: { accent: '#6366F1', 'accent-light': '#818CF8' }
+    }
+  }
+}
+</script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{font-family:'DM Sans',sans-serif}
+h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
+body{transition:background-color .3s,color .3s}
+
+/* noise overlay */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.2;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#6366F1;border-radius:99px}
+
+/* reveal on scroll */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s cubic-bezier(.4,0,.2,1),transform .6s cubic-bezier(.4,0,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+
+/* nav underline animation */
+.nl{position:relative}
+.nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:currentColor;transition:width .22s cubic-bezier(.4,0,.2,1)}
+.nl:hover::after,.nl.on::after{width:100%}
+.nl.on{font-weight:500}
+
+/* shimmer button */
+.shimmer{position:relative;overflow:hidden}
+.shimmer::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:rgba(255,255,255,.12);transform:skewX(-20deg);transition:left .4s cubic-bezier(.4,0,.2,1)}
+.shimmer:hover::after{left:160%}
+
+/* pf placeholder style */
+.pf{overflow:hidden;background:#3f3f46} /* darker gray for pf */
+
+/* card hover */
+.card-h{transition:transform .28s cubic-bezier(.4,0,.2,1),border-color .18s}
+.card-h:hover{transform:translateY(-4px)}
+
+/* skill tag */
+.stag{transition:border-color .18s}
+
+[x-cloak]{display:none!important}
+</style>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased">
+
+<header class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
+  :class="sc?'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5':''">
+  <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+
+    <a href="#hero" class="font-display font-bold text-xl tracking-tight relative z-10">
+      <span class="text-zinc-900 dark:text-white">Gui</span><span class="text-accent">lherme</span>
+    </a>
+
+    <ul class="hidden md:flex items-center gap-8 text-sm" role="list">
+      <li><a href="#services" class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='services'?'on !text-zinc-900 dark:!text-white':''">Conhecimentos</a></li>
+      <li><a href="#work"     class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='work'?'on !text-zinc-900 dark:!text-white':''">Projetos</a></li>
+      <li><a href="#about"   class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='about'?'on !text-zinc-900 dark:!text-white':''">Sobre</a></li>
+      <li><a href="#contact" class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='contact'?'on !text-zinc-900 dark:!text-white':''">Contato</a></li>
+    </ul>
+
+    <div class="flex items-center gap-3">
+      <button @click="dark=!dark" class="w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors" :aria-label="dark?'Light mode':'Dark mode'">
+        <svg x-show="!dark" class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg x-show="dark"  class="w-4 h-4 text-accent-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+      </button>
+      <a href="#contact" class="hidden md:inline-flex items-center gap-2 shimmer bg-accent text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-accent-light transition-colors">
+        Fale Comigo <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+      <button @click="mm=!mm" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white" :aria-expanded="mm" aria-label="Toggle menu">
+        <svg x-show="!mm" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg x-show="mm"  class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div x-show="mm" x-cloak
+    x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2"
+    class="md:hidden bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900">
+    <ul class="flex flex-col px-6 py-5 gap-4 text-sm font-medium" role="list">
+      <li><a href="#services" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Conhecimentos</a></li>
+      <li><a href="#work"     @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Projetos</a></li>
+      <li><a href="#about"   @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Sobre</a></li>
+      <li><a href="#contact" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Contato</a></li>
+      <li class="pt-2 border-t border-zinc-100 dark:border-zinc-900">
+        <a href="#contact" @click="mm=false" class="inline-flex shimmer bg-accent text-white font-medium text-sm px-5 py-2.5 rounded-full">Fale Comigo →</a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<main>
+
+<section id="hero" class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+  <div class="absolute top-1/4 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+  <div class="absolute bottom-1/4 left-0 w-64 h-64 bg-zinc-200/50 dark:bg-zinc-800/30 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+  <div class="relative z-10 max-w-6xl mx-auto px-6 py-24 w-full">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+
+      <div>
+        <p class="reveal text-sm font-medium text-accent tracking-widest uppercase mb-4">Em busca da 1ª oportunidade</p>
+        <h1 class="reveal d1 font-display font-bold text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight text-zinc-900 dark:text-white mb-6">
+          Olá, Eu me chamo <span class="text-accent">Guilherme</span>
+        </h1>
+        <p class="reveal d2 text-lg md:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-md mb-10">
+          Estudante de <strong class="font-medium text-zinc-700 dark:text-zinc-300">Desenvolvimento de Sistemas</strong>. Apaixonado por tecnologia e focado em construir uma carreira sólida como Desenvolvedor BackEnd.
+        </p>
+        <div class="reveal d3 flex flex-wrap gap-4">
+          <a href="#work" class="shimmer inline-flex items-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-medium px-7 py-3.5 rounded-full hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-colors text-sm">
+            Ver meus projetos
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </a>
+          <a href="#contact" class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium px-7 py-3.5 rounded-full hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors text-sm">Entrar em contato</a>
+        </div>
+        <div class="reveal d4 flex gap-8 mt-14 pt-8 border-t border-zinc-100 dark:border-zinc-900">
+          <div><p class="font-display font-bold text-3xl text-zinc-900 dark:text-white">17</p><p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Anos de Idade</p></div>
+          <div><p class="font-display font-bold text-3xl text-zinc-900 dark:text-white">2º</p><p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Semestre de Curso</p></div>
+          <div><p class="font-display font-bold text-3xl text-zinc-900 dark:text-white">Java</p><p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Estudo principal</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="services" class="py-24 bg-zinc-50 dark:bg-zinc-900/40">
+  <section id="services" class="py-24 relative">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+    
+    <div class="text-center mb-16">
+      <span class="text-accent font-medium tracking-wider uppercase text-sm mb-4 block reveal d1">Minha Base</span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl text-zinc-900 dark:text-white reveal d2">O Que Eu Estudo</h2>
+      <p class="text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto mt-4 reveal d3">
+        Estas são as tecnologias e ferramentas nas quais estou focando meu aprendizado diário para me tornar um desenvolvedor cada vez mais completo.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <article class="reveal d1 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="w-14 h-14 flex items-center justify-center bg-[#E34F26]/10 rounded-xl mb-6 group-hover:scale-110 transition-transform">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="Logo HTML5" class="w-8 h-8">
+        </div>
+        <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-2">HTML5</h3>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Domínio da semântica web para estruturar páginas de forma correta, acessível e otimizada.</p>
+      </article>
+
+      <article class="reveal d4 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="w-14 h-14 flex items-center justify-center bg-[#61DAFB]/10 rounded-xl mb-6 group-hover:scale-110 transition-transform">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="Logo React" class="w-8 h-8">
+        </div>
+        <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-2">React</h3>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Criação de interfaces dinâmicas, componentes reutilizáveis e consumo de APIs.</p>
+      </article>
+
+      <article class="reveal d3 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="w-14 h-14 flex items-center justify-center bg-[#F7DF1E]/10 rounded-xl mb-6 group-hover:scale-110 transition-transform">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="Logo JavaScript" class="w-8 h-8">
+        </div>
+        <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-2">JavaScript</h3>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">A base da interatividade. Criação de lógicas, manipulação de dados e validações.</p>
+      </article>
+
+      <article class="reveal d2 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="w-14 h-14 flex items-center justify-center bg-[#1572B6]/10 rounded-xl mb-6 group-hover:scale-110 transition-transform">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="Logo CSS3" class="w-8 h-8">
+        </div>
+        <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-2">CSS3</h3>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Estilização visual, animações fluidas e layouts responsivos para qualquer tela.</p>
+      </article>
+
+   <article class="reveal d5 card-h group bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+        <div class="w-14 h-14 flex items-center justify-center bg-[#5382A1]/10 rounded-xl mb-6 group-hover:scale-110 transition-transform">
+          
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Logo Java" class="w-8 h-8">
+          
+        </div>
+        <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-2">Java</h3>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Foco no desenvolvimento BackEnd. Aprendendo estruturação de sistemas complexos, lógica pura e Orientação a Objetos aplicada ao mercado.</p>
+      </article>
+
+</section>
+</section>
+
+<section id="work" class="py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14">
+      <div>
+        <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Portfólio</p>
+        <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-zinc-900 dark:text-white">Projetos de Estudo</h2>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      
+     <a href="https://github.com/Ghuilherme29/Programa-o-Web" target="_blank" class="reveal d1 group p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-accent transition-all text-left block">
+  <div class="flex justify-between items-start mb-4">
+    <div class="w-10 h-10 flex items-center justify-center bg-indigo-50 dark:bg-zinc-800 rounded-lg text-accent">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+    </div>
+    <svg class="w-5 h-5 text-zinc-400 group-hover:text-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+  </div>
+  
+  <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-2 group-hover:text-accent transition-colors">Programação Web</h3>
+  <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6 line-clamp-3">Repositório dedicado aos meus estudos de desenvolvimento para a web. Inclui a prática de versionamento de código com comandos Git/GitHub.</p>
+  
+  <div class="flex flex-wrap gap-2">
+    <span class="text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 px-2.5 py-1 rounded-md">Web</span>
+    <span class="text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 px-2.5 py-1 rounded-md">Git/GitHub</span>
+  </div>
+  
+</a>
+
+  <article class="reveal group bg-zinc-50/30 dark:bg-zinc-900/30 rounded-2xl p-8 border border-dashed border-zinc-200 dark:border-zinc-800 hover:border-accent/50 transition-all">
+        <div class="w-14 h-14 flex items-center justify-center bg-zinc-100/50 dark:bg-zinc-800/50 rounded-xl mb-6 group-hover:scale-110 transition-transform">
+          <svg class="w-6 h-6 text-zinc-400 dark:text-zinc-600 group-hover:text-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </div>
+        <h3 class="font-display font-bold text-xl text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors mb-2">Em breve...</h3>
+        <p class="text-sm text-zinc-400 dark:text-zinc-500 leading-relaxed">Novas aplicações, APIs e sistemasestão sendo desenvolvidos no momento. Fique atento para as atualizações!</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="py-24 bg-zinc-50 dark:bg-zinc-900/40 border-t border-zinc-100 dark:border-zinc-900">
+  <div class="max-w-4xl mx-auto px-6">
+    
+    <div>
+      <p class="reveal text-xs font-medium text-accent tracking-widest uppercase mb-3">Sobre mim</p>
+      <h2 class="reveal d1 font-display font-bold text-4xl md:text-5xl text-zinc-900 dark:text-white leading-tight mb-6">Um pouco sobre<br>quem eu sou</h2>
+      <p class="reveal d2 text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4 text-lg">
+        Me chamo Guilherme, tenho 17 anos e atualmente estou cursando o 2º semestre de Desenvolvimento de Sistemas. Minha grande paixão na tecnologia é entender como as coisas funcionam "por baixo dos panos", o que me motiva diariamente a focar na carreira de Desenvolvedor BackEnd.
+      </p>
+      
+      
+  </div>
+</section>
+
+<section id="contact" class="py-24 bg-zinc-900 dark:bg-black border-t border-zinc-800 dark:border-zinc-900">
+  <div class="reveal d3 flex flex-wrap justify-center gap-4">
+      <a href="mailto:guilherme.silva15@ba.estudante.senai.br" class="inline-flex shimmer bg-accent text-white font-medium px-8 py-4 rounded-full hover:bg-accent-light transition-all text-sm uppercase tracking-wide">
+        Enviar E-mail
+        <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </a>
+
+      <a href="https://github.com/Ghuilherme29" target="_blank" class="inline-flex items-center bg-zinc-800 text-white font-medium px-8 py-4 rounded-full hover:bg-zinc-700 transition-all text-sm uppercase tracking-wide border border-zinc-700">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+        </svg>
+        Meu GitHub
+      </a>
+    </div>
+</section>
+
+</main>
+
+<footer class="py-8 bg-zinc-950 dark:bg-black text-center border-t border-zinc-900">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-zinc-500">
+    <p>© <span id="yr"></span> Guilherme <span class="text-zinc-700 mx-1">|<span> Desenvolvedor BackEnd/ Jr.</p>
+    <p class="text-xs">Built with <a href="https://tailwindcss.com" target="_blank" class="text-zinc-400 hover:text-accent">Tailwind CSS</a> & <a href="https://alpinejs.dev" target="_blank" class="text-zinc-400 hover:text-accent">Alpine.js</a></p>
+  </div>
+</footer>
+
+<script>
+function app() {
+  return {
+    dark: localStorage.getItem('theme') === 'dark',
+    sc: false,
+    mm: false,
+    s: '',
+    init() {
+      // Dark mode logic
+      if (!localStorage.getItem('theme')) {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          this.dark = true;
+        }
+      }
+      this.$watch('dark', val => localStorage.setItem('theme', val ? 'dark' : 'light'));
+
+      // Year
+      document.getElementById('yr').textContent = new Date().getFullYear();
+      
+      // Scroll handling
+      window.addEventListener('scroll', () => {
+        this.sc = window.scrollY > 20;
+        
+        // Active section highlight
+        const sections = ['hero', 'services', 'work', 'about'];
+        for (let sec of sections) {
+          const el = document.getElementById(sec);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= 150 && rect.bottom >= 150) {
+              this.s = sec;
+            }
+          }
+        }
+        // Contact check (at the bottom)
+        const contactRect = document.getElementById('contact').getBoundingClientRect();
+        if(contactRect.top <= window.innerHeight) { this.s = 'contact'; }
+        
+        // Reveal elements on scroll
+        document.querySelectorAll('.reveal').forEach(el => {
+          if (el.getBoundingClientRect().top < window.innerHeight - 50) {
+            el.classList.add('in');
+          }
+        });
+      }, { passive: true });
+      
+      // Initial trigger
+      window.dispatchEvent(new Event('scroll'));
+    }
+  }
+}
+</script>
+
+</body>
+</html>
